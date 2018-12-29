@@ -1,0 +1,125 @@
+apriori(...)
+    apriori (tracts, target='s', supp=10, zmin=1, zmax=None, report='a',
+             eval='x', agg='x', thresh=10, prune=None, algo='b', mode='',
+             border=None)
+    Find frequent item sets with the Apriori algorithm.
+    tracts  transaction database to mine (mandatory)
+            The database must be an iterable of transactions;
+            each transaction must be an iterable of items;
+            each item must be a hashable object.
+            If the database is a dictionary, the transactions are
+            the keys, the values their (integer) multiplicities.
+    target  type of frequent item sets to find     (default: s)
+            s/a   sets/all   all     frequent item sets
+            c     closed     closed  frequent item sets
+            m     maximal    maximal frequent item sets
+            g     gens       generators
+            r     rules      association rules
+    supp    minimum support of an item set         (default: 10)
+            (positive: percentage, negative: absolute number)
+    conf    minimum confidence of an assoc. rule   (default: 80%)
+    zmin    minimum number of items per item set   (default: 1)
+    zmax    maximum number of items per item set   (default: no limit)
+    report  values to report with an item set      (default: a)
+            a     absolute item set support (number of transactions)
+            s     relative item set support as a fraction
+            S     relative item set support as a percentage
+            e     value of item set evaluation measure
+            E     value of item set evaluation measure as a percentage
+            (     combine values in a tuple (must be first character)
+            [     combine values in a list  (must be first character)
+            #     pattern spectrum as a dictionary  (no patterns)
+            =     pattern spectrum as a list        (no patterns)
+            |     pattern spectrum as three columns (no patterns)
+            for target 'r' (association rules) also available:
+            b     absolute body set  support (number of transactions)
+            x     relative body set  support as a fraction
+            X     relative body set  support as a percentage
+            h     absolute head item support (number of transactions)
+            y     relative head item support as a fraction
+            Y     relative head item support as a percentage
+            c     rule confidence as a fraction
+            C     rule confidence as a percentage
+            l     lift value of a rule (confidence/prior)
+            L     lift value of a rule as a percentage
+            Q     support of the empty set (total number of transactions)
+    eval    measure for item set evaluation        (default: x)
+            x     none       no measure / zero (default)
+            b     ldratio    binary logarithm of support quotient       (+)
+            c     conf       rule confidence                            (+)
+            d     confdiff   absolute confidence difference to prior    (+)
+            l     lift       lift value (confidence divided by prior)   (+)
+            a     liftdiff   absolute difference of lift value to 1     (+)
+            q     liftquot   difference of lift quotient to 1           (+)
+            v     cvct       conviction (inverse lift for negated head) (+)
+            e     cvctdiff   absolute difference of conviction to 1     (+)
+            r     cvctquot   difference of conviction quotient to 1     (+)
+            k     cprob      conditional probability ratio              (+)
+            j     import     importance (binary log. of prob. ratio)    (+)
+            z     cert       certainty factor (relative conf. change)   (+)
+            n     chi2       normalized chi^2 measure                   (+)
+            p     chi2pval   p-value from (unnormalized) chi^2 measure  (-)
+            y     yates      normalized chi^2 with Yates' correction    (+)
+            t     yatespval  p-value from Yates-corrected chi^2 measure (-)
+            i     info       information difference to prior            (+)
+            g     infopval   p-value from G statistic/info. difference  (-)
+            f     fetprob    Fisher's exact test (table probability)    (-)
+            h     fetchi2    Fisher's exact test (chi^2 measure)        (-)
+            m     fetinfo    Fisher's exact test (mutual information)   (-)
+            s     fetsupp    Fisher's exact test (support)              (-)
+            Measures marked with (+) must meet or exceed the threshold,
+            measures marked with (-) must not exceed the threshold
+            in order for the item set to be reported.
+    agg     evaluation measure aggregation mode    (default: x)
+            x     none       no aggregation (use first value)
+            m     min        minimum of individual measure values
+            n     max        maximum of individual measure values
+            a     avg        average of individual measure values
+    thresh  threshold for evaluation measure       (default: 10%)
+    prune   min. size for evaluation filtering     (default: no pruning)
+            = 0   backward filtering       (no subset check)
+            < 0   weak   forward filtering (one subset  must qualify)
+            > 0   strong forward filtering (all subsets must qualify)
+    algo    algorithm variant to use               (default: a)
+            b     basic      standard algorithm (only choice)
+    mode    operation mode indicators/flags        (default: None)
+            x     do not use perfect extension pruning
+            t/T   do not organize transactions as a prefix tree
+            y     a-posteriori pruning of infrequent item sets
+            z     invalidate evaluation below expected support
+            o     use original rule support definition (body & head)
+    border  support border for filtering item sets (default: None)
+            Must be a list or tuple of (absolute) minimum support values
+            per item set size (by which the list/tuple is indexed).
+    appear  dictionary mapping items to item appearance indicators,
+            with the key None referring to the default item appearance.
+            (If None does not occur as a key or no dictionary is given,
+            the default item appearance indicator is 'both'.)
+            This parameter is only used if the target type is rules.
+            * item may not appear anywhere in a rule:
+              '-', 'n', 'none', 'neither', 'ignore'
+            * item may appear only in rule body/antecedent:
+              'i', 'in', 'inp', 'input', 'b', 'body',
+              'a', 'ante', 'antecedent'
+            * item may appear only in rule head/consequent:
+              'o', 'out',      'output', 'h', 'head',
+              'c', 'cons', 'consequent'
+            * item may appear anywhere in a rule:
+              'io', 'i&o', 'inout', 'in&out', 'bh', 'b&h', 'both'
+    returns if report is not in ['#','=','|']:
+              if the target is association rules:
+                a list of rules (i.e. tuples with two or more elements),
+                each consisting of a head/consequent item, a tuple with
+                a body/antecedent item set, and the values selected by
+                the parameter 'report', which may be combined into a
+                tuple or a list if report[0] is '(' or '[', respectively.          if the target is a type of item sets:
+                a list of patterns (i.e. tuples with one or more elements),
+                each consisting of a tuple with a found frequent item set
+                and the values selected by the parameter 'report', which
+                may be combined into a tuple or list if report[0] is '('
+                or '[', respectively
+            if report in ['#','=','|']:
+              a pattern spectrum as a dictionary mapping pattern sizes
+              to the corresponding occurrence support ranges, as a list
+              of triplets (size, min. support, max. support) or as three
+              columns for sizes and minimum and maximum support values
