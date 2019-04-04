@@ -7,7 +7,7 @@ The project includes:
 - Data understanding 
 - Clustering analysis
 - Classification
-- Pattern mining.
+- Pattern mining
 
 We used python and jupyter notebook for this project plus some external libraries.
 
